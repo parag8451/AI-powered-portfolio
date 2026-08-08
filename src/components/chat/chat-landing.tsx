@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { Award, Code, Mail, MessageSquare, Sparkles } from 'lucide-react';
 import React from 'react';
 
@@ -40,7 +40,7 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery }) => {
     },
   ];
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -51,7 +51,7 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery }) => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 16, filter: 'blur(4px)' },
     visible: {
       opacity: 1,
@@ -59,7 +59,7 @@ const ChatLanding: React.FC<ChatLandingProps> = ({ submitQuery }) => {
       filter: 'blur(0px)',
       transition: {
         duration: 0.5,
-        ease: [0.25, 0.1, 0.25, 1],
+        ease: 'easeOut',
       },
     },
   };

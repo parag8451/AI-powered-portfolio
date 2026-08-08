@@ -77,22 +77,15 @@ const PROJECT_CONTENT = [
     images: [
       {
         src: '/projects/Lexa-Ai-home.png',
-        alt: 'Lexa-AI home screen',
+        alt: 'Lexa-AI Branding and Architecture',
       },
-
       {
-        src: '/projects/Lexa-Ai-Login.png',
-        alt: 'Lexa-AI login screen',
+        src: '/projects/Lexa-Ai-Landing.png',
+        alt: 'Lexa-AI Assistant Platform Landing',
       },
-
       {
-        src: '/projects/Lexa-Ai-UI.png',
-        alt: 'Lexa-AI UI screen',
-      },
-
-      {
-        src: '/projects/Lexa-Ai-Chat.png',
-        alt: 'Lexa-AI chat interface',
+        src: '/projects/Lexa-Ai-Assistant.png',
+        alt: 'Lexa-AI Multimodal Workspace & Vision OCR',
       },
     ],
   },

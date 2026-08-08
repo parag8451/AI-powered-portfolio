@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Mail, Phone, Linkedin, Github, Instagram, MapPin } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 
 export function Contact() {
   const contactInfo = [
@@ -51,7 +51,7 @@ export function Contact() {
     }
   ];
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -59,13 +59,13 @@ export function Contact() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.5, ease: [0.34, 1.56, 0.64, 1] },
+      transition: { duration: 0.5, ease: 'easeOut' },
     },
   };
 

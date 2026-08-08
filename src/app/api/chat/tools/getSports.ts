@@ -8,6 +8,6 @@ export const getSports = tool({
     "This tool will show some photos of parag1 riding his bike",
   parameters: z.object({}),
   execute: async () => {
-    return "Here my some pictures of me enjoying a bike ride!";
+    return "Here are my sports and hobbies highlights!";
   },
 });

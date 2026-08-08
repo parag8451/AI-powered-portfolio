@@ -17,8 +17,10 @@ import {
 } from '@/components/ui/chat/chat-bubble';
 import WelcomeModal from '@/components/welcome-modal';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
-import { Info } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowLeft, Info, Sparkles } from 'lucide-react';
 import { GithubButton } from '../ui/github-button';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import HelperBoost from './HelperBoost';
 
 // ClientOnly component for client-side rendering
@@ -47,61 +49,88 @@ interface AvatarProps {
 // Dynamic import of Avatar component
 const Avatar = dynamic<AvatarProps>(
   () =>
-    Promise.resolve(({ hasActiveTool, videoRef, isTalking }: AvatarProps) => {
-      // This function will only execute on the client
-      const isIOS = () => {
-        // Multiple detection methods
-        const userAgent = window.navigator.userAgent;
-        const platform = window.navigator.platform;
-        const maxTouchPoints = window.navigator.maxTouchPoints || 0;
-
-        // UserAgent-based check
-        const isIOSByUA =
-          //@ts-ignore
-          /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-
-        // Platform-based check
-        const isIOSByPlatform = /iPad|iPhone|iPod/.test(platform);
-
-        // iPad Pro check
-        const isIPadOS =
-          //@ts-ignore
-          platform === 'MacIntel' && maxTouchPoints > 1 && !window.MSStream;
-
-        // Safari check
-        const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
-
-        return isIOSByUA || isIOSByPlatform || isIPadOS || isSafari;
-      };
-
-      // Conditional rendering based on detection
+    Promise.resolve(({ hasActiveTool, isTalking }: AvatarProps) => {
       return (
         <div
-          className={`flex items-center justify-center rounded-full transition-all duration-300 ${hasActiveTool ? 'h-20 w-20' : 'h-28 w-28'}`}
+          className={`relative flex items-center justify-center rounded-full transition-all duration-300 ${
+            hasActiveTool ? 'h-20 w-20' : 'h-28 w-28'
+          }`}
         >
-          <div
-            className="relative h-full w-full cursor-pointer"
-            onClick={() => (window.location.href = '/')}
+          {/* Animated pulsing rings when AI is talking */}
+          {isTalking && (
+            <>
+              <motion.span
+                className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/40 via-purple-500/40 to-pink-500/40 blur-md"
+                animate={{
+                  scale: [1, 1.25, 1],
+                  opacity: [0.6, 0.9, 0.6],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              />
+              <motion.span
+                className="absolute -inset-2 rounded-full border border-purple-500/50"
+                animate={{
+                  scale: [1, 1.15, 1],
+                  opacity: [0.8, 0.2, 0.8],
+                }}
+                transition={{
+                  duration: 1.2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              />
+            </>
+          )}
+
+          <motion.div
+            className="relative h-full w-full cursor-pointer overflow-hidden rounded-full p-1"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            animate={
+              isTalking
+                ? {
+                    y: [0, -3, 0],
+                  }
+                : {}
+            }
+            transition={
+              isTalking
+                ? {
+                    duration: 0.6,
+                    repeat: Infinity,
+                    repeatType: 'reverse',
+                    ease: 'easeInOut',
+                  }
+                : {}
+            }
           >
-            {isIOS() ? (
+            <Link href="/" title="Back to home">
               <img
                 src="/landing-memojis.png"
-                alt="iOS avatar"
-                className="h-full w-full object-contain"
+                alt="Parag AI Avatar"
+                className={`h-full w-full object-contain drop-shadow-xl transition-all duration-300 ${
+                  isTalking ? 'brightness-110 drop-shadow-[0_0_20px_rgba(139,92,246,0.6)]' : ''
+                }`}
               />
-            ) : (
-              <video
-                ref={videoRef}
-                className="h-full w-full object-contain"
-                muted
-                playsInline
-                loop
-              >
-                <source src="/final_memojis.webm" type="video/webm" />
-                <source src="/final_memojis_ios.mp4" type="video/mp4" />
-              </video>
-            )}
-          </div>
+            </Link>
+          </motion.div>
+
+          {/* Online active status indicator badge */}
+          <span
+            className={`absolute bottom-0 right-1 flex h-3.5 w-3.5 rounded-full border-2 border-white dark:border-black ${
+              isTalking ? 'bg-purple-500' : 'bg-emerald-500'
+            }`}
+          >
+            <span
+              className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${
+                isTalking ? 'bg-purple-400' : 'bg-emerald-400'
+              }`}
+            />
+          </span>
         </div>
       );
     }),
@@ -114,7 +143,7 @@ const MOTION_CONFIG = {
   exit: { opacity: 0, y: 20 },
   transition: {
     duration: 0.3,
-    ease: 'easeOut',
+    ease: 'easeOut' as const,
   },
 };
 
@@ -277,16 +306,28 @@ const Chat = () => {
 
   return (
     <div className="relative h-screen overflow-hidden">
-      <ScrollProgress />
-      <div className="absolute top-6 right-8 z-51 flex flex-col-reverse items-center justify-center gap-1 md:flex-row">
+      {/* Top Left Navigation */}
+      <div className="absolute top-6 left-6 z-51 flex items-center gap-2">
+        <Link
+          href="/"
+          className="flex items-center gap-2 rounded-full border border-neutral-200/60 bg-white/60 px-3.5 py-1.5 text-sm font-medium text-neutral-700 backdrop-blur-md transition-all duration-300 hover:bg-white/90 hover:shadow-md dark:border-neutral-700/60 dark:bg-neutral-800/60 dark:text-neutral-200 dark:hover:bg-neutral-700/80"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span className="hidden sm:inline">Back to Home</span>
+        </Link>
+      </div>
+
+      {/* Top Right Actions */}
+      <div className="absolute top-6 right-6 z-51 flex items-center justify-center gap-2">
+        <ThemeToggle />
         <WelcomeModal
           trigger={
-            <div className="hover:bg-accent cursor-pointer rounded-2xl px-3 py-1.5">
-              <Info className="text-accent-foreground h-8" />
+            <div className="hover:bg-accent cursor-pointer rounded-full p-2 transition-colors">
+              <Info className="text-accent-foreground h-5 w-5" />
             </div>
           }
         />
-        <div className="">
+        <div>
           <GithubButton
             animationDuration={1.5}
             label="Star"

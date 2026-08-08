@@ -62,7 +62,7 @@ export default function WelcomeModal({ trigger }: WelcomeModalProps) {
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.5, type: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
             className="flex h-full flex-col"
           >
             {/* Header with gradient background */}
@@ -90,14 +90,14 @@ export default function WelcomeModal({ trigger }: WelcomeModalProps) {
 
             {/* Content area with animated sections */}
             <div className="space-y-6 overflow-y-auto px-2 py-4 md:px-8">
-              <motion.section 
+              <motion.section
                 className="bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20 w-full space-y-8 rounded-2xl p-8 border border-white/10 shadow-lg hover:shadow-xl transition-shadow duration-300"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
               >
                 {/* What section */}
-                <motion.div 
+                <motion.div
                   className="space-y-3"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -117,7 +117,7 @@ export default function WelcomeModal({ trigger }: WelcomeModalProps) {
                 </motion.div>
 
                 {/* Why section */}
-                <motion.div 
+                <motion.div
                   className="space-y-3"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -161,8 +161,8 @@ export default function WelcomeModal({ trigger }: WelcomeModalProps) {
                 <p className="text-muted-foreground text-cinematic">
                   If you love it, please share it! Feedback is always welcome.
                 </p>
-                <div className="flex cursor-pointer items-center text-blue-600 dark:text-blue-400 hover:underline transition-all duration-200 font-semibold" 
-                onClick={handleContactMe}>
+                <div className="flex cursor-pointer items-center text-blue-600 dark:text-blue-400 hover:underline transition-all duration-200 font-semibold"
+                  onClick={handleContactMe}>
                   Contact me →
                 </div>
               </motion.div>

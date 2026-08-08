@@ -74,58 +74,71 @@ const CodeBlock = ({ content }: { content: string }) => {
 export default function ChatMessageContent({
   message,
 }: ChatMessageContentProps) {
-  // Only handle text parts
+  // Helper to render text with codeblocks and markdown
+  const renderTextWithCodeBlocks = (text: string, keyPrefix: string | number) => {
+    const contentParts = text.split('```');
+    return (
+      <div key={keyPrefix} className="w-full space-y-4">
+        {contentParts.map((content, i) =>
+          i % 2 === 0 ? (
+            // Regular text content
+            <div key={`text-${keyPrefix}-${i}`} className="prose dark:prose-invert w-full">
+              <Markdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p: ({ children }) => (
+                    <p className="break-words whitespace-pre-wrap">
+                      {children}
+                    </p>
+                  ),
+                  ul: ({ children }) => (
+                    <ul className="my-4 list-disc pl-6">{children}</ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="my-4 list-decimal pl-6">{children}</ol>
+                  ),
+                  li: ({ children }) => <li className="my-1">{children}</li>,
+                  a: ({ href, children }) => (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      {children}
+                    </a>
+                  ),
+                }}
+              >
+                {content}
+              </Markdown>
+            </div>
+          ) : (
+            // Code block content
+            <CodeBlock key={`code-${keyPrefix}-${i}`} content={content} />
+          )
+        )}
+      </div>
+    );
+  };
+
   const renderContent = () => {
-    return message.parts?.map((part, partIndex) => {
-      if (part.type !== 'text' || !part.text) return null;
-
-      // Split content by code block markers
-      const contentParts = part.text.split('```');
-
-      return (
-        <div key={partIndex} className="w-full space-y-4">
-          {contentParts.map((content, i) =>
-            i % 2 === 0 ? (
-              // Regular text content
-              <div key={`text-${i}`} className="prose dark:prose-invert w-full">
-                <Markdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{
-                    p: ({ children }) => (
-                      <p className="break-words whitespace-pre-wrap">
-                        {children}
-                      </p>
-                    ),
-                    ul: ({ children }) => (
-                      <ul className="my-4 list-disc pl-6">{children}</ul>
-                    ),
-                    ol: ({ children }) => (
-                      <ol className="my-4 list-decimal pl-6">{children}</ol>
-                    ),
-                    li: ({ children }) => <li className="my-1">{children}</li>,
-                    a: ({ href, children }) => (
-                      <a
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline"
-                      >
-                        {children}
-                      </a>
-                    ),
-                  }}
-                >
-                  {content}
-                </Markdown>
-              </div>
-            ) : (
-              // Code block content
-              <CodeBlock key={`code-${i}`} content={content} />
-            )
-          )}
-        </div>
+    // If message.parts has text parts, render them
+    const textParts = message.parts?.filter(
+      (p): p is { type: 'text'; text: string } => p.type === 'text'
+    );
+    if (textParts && textParts.length > 0) {
+      return textParts.map((part, index) =>
+        renderTextWithCodeBlocks(part.text || '', index)
       );
-    });
+    }
+
+    // Fallback to message.content
+    if (message.content && message.content.trim().length > 0) {
+      return renderTextWithCodeBlocks(message.content, 'fallback');
+    }
+
+    return null;
   };
 
   return <div className="w-full">{renderContent()}</div>;

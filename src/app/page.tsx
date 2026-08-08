@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { GithubButton } from '@/components/ui/github-button';
 import { SparklesCore } from '@/components/ui/sparkles';
 import WelcomeModal from '@/components/welcome-modal';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import {
   ArrowRight,
   BriefcaseBusiness,
@@ -46,7 +46,7 @@ export default function Home() {
     router.push(`/chat?query=${encodeURIComponent(query)}`);
 
   /* Cinematic hero animations */
-  const topElementVariants = {
+  const topElementVariants: Variants = {
     hidden: { 
       opacity: 0, 
       y: -60,
@@ -57,13 +57,12 @@ export default function Home() {
       y: 0,
       filter: 'blur(0px)',
       transition: { 
-        type: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
         duration: 0.9,
-        ease: 'easeOut'
+        ease: 'easeOut',
       },
     },
   };
-  const bottomElementVariants = {
+  const bottomElementVariants: Variants = {
     hidden: { 
       opacity: 0, 
       y: 80,
@@ -74,16 +73,15 @@ export default function Home() {
       y: 0,
       filter: 'blur(0px)',
       transition: { 
-        type: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
         duration: 0.9, 
         delay: 0.2,
-        ease: 'easeOut'
+        ease: 'easeOut',
       },
     },
   };
 
   /* Image animation with floating effect */
-  const imageVariants = {
+  const imageVariants: Variants = {
     hidden: { 
       opacity: 0, 
       scale: 0.8,
@@ -94,15 +92,15 @@ export default function Home() {
       scale: 1,
       filter: 'blur(0px)',
       transition: { 
-        type: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
         duration: 1,
-        delay: 0.3
+        delay: 0.3,
+        ease: 'easeOut',
       },
     },
   };
 
   /* Button stagger animation */
-  const buttonContainerVariants = {
+  const buttonContainerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -113,7 +111,7 @@ export default function Home() {
     },
   };
 
-  const buttonVariants = {
+  const buttonVariants: Variants = {
     hidden: { 
       opacity: 0, 
       y: 20,
@@ -123,30 +121,20 @@ export default function Home() {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: {
-        type: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+      transition: { 
         duration: 0.6,
+        ease: 'easeOut',
       },
     },
   };
 
   useEffect(() => {
-    // Précharger les assets du chat en arrière-plan
+    // Preload critical assets in the background
     const img = new window.Image();
     img.src = '/landing-memojis.png';
 
-    // Précharger les vidéos aussi
-    const linkWebm = document.createElement('link');
-    linkWebm.rel = 'preload'; // Note: prefetch au lieu de preload
-    linkWebm.as = 'video';
-    linkWebm.href = '/final_memojis.webm';
-    document.head.appendChild(linkWebm);
-
-    const linkMp4 = document.createElement('link');
-    linkMp4.rel = 'prefetch';
-    linkMp4.as = 'video';
-    linkMp4.href = '/final_memojis_ios.mp4';
-    document.head.appendChild(linkMp4);
+    const profileImg = new window.Image();
+    profileImg.src = '/profile-parag.jpg';
   }, []);
 
   return (
